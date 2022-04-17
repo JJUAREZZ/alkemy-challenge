@@ -1,41 +1,45 @@
-const bcrypt = require('bcrypt');
-const User = require('../models/user');
+const bcrypt = require("bcrypt");
+const User = require("../models/usersNew");
 
 class UserRepository {
+  constructor() {}
 
-    constructor(){
+  async findAll() {
+    return await User.findAll();
+  }
 
-    }
-
-
-    async findAll(){
-        return await User.find();
-    }
-
-    async findAllWithPagination(filter, options){
+  /*async findAllWithPagination(filter, options){
         return await User.paginate(filter, options);
-    }
+    }*/
 
-    async findById(id) {
-        return await User.findById(id);
-    }
-    
-    async findByEmail(email) {
-        return await User.findOne({email});
-    }
+  async findById(id) {
+    return await User.findByPk(id);
+  }
 
-    async save(user) {
-        user.password = await bcrypt.hash(user.password, 10);
-        return await User.create(user);
-    }
+  async findByEmail(email) {
+    return await User.findOne({ email });
+  }
 
-    async update(id, user){
-        return await User.findByIdAndUpdate(id, user, {new : true});
-    }
+  async save(user) {
+    user.password = await bcrypt.hash(user.password, 10);
+    return await User.create(user);
+  }
 
-    async remove(id) {
-        return await User.findByIdAndRemove(id);
-    }
+  async update(id, user) {
+    return await User.update(user, {
+      where: {
+        id,
+      },
+    });
+  }
+
+  async remove(id) {
+    return await User.destroy({
+      where: {
+        id,
+      },
+    });
+  }
 }
 
 module.exports = UserRepository;
